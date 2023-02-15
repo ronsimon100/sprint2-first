@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <title>create your meme</title>
+</head>
+
+<body onload="onInit">
+    <nav class="navbar navbar-expand-md navbar-light bg-light">
+        <a class="navbar-brand" href="#">
+            <img src="https://qph.cf2.quoracdn.net/main-qimg-5ce8d9e4c6b1634b4ff662d59d2feb29" alt="Logo" width="300" height="300">
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Gallery</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Memes</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">About</a>
+                </li>
+                <li class="nav-item">
+                    <form class="form-inline">
+                        <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+                        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+                    </form>
+                </li>
+            </ul>
+        </div>
+    </nav>
+        <div class="meme-gallery">
+            <img class="img img1" src="img/1.jpg" alt="" />
+            <img class="img img2" src="img/2.jpg" alt="" />
+            <img class="img img3" src="img/3.jpg" alt="" />
+            <img class="img img4" src="img/4.jpg" alt="" />
+            <img class="img img5" src="img/5.jpg" alt="" />
+            <img class="img img6" src="img/6.jpg" alt="" />
+            <img class="img img7" src="img/7.jpg" alt="" />
+            <img class="img img8" src="img/8.jpg" alt="" />
+            <img class="img img9" src="img/9.jpg" alt="" />
+            <img class="img img10" src="img/10.jpg" alt="" />
+            <img class="img img11" src="img/11.jpg" alt="" />
+            <img class="img img12" src="img/12.jpg" alt="" />
+            <img class="img img13" src="img/13.jpg" alt="" />
+            <img class="img img14" src="img/14.jpg" alt="" />
+            <img class="img img15" src="img/15.jpg" alt="" />
+            <img class="img img16" src="img/16.jpg" alt="" />
+            <img class="img img17" src="img/17.jpg" alt="" />
+            <img class="img img18" src="img/18.jpg" alt=""/>
+        </div>
+        <script src="js/gallery.controller.js"></script>
+        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+        <script src="js/main.controller.js"></script>
+        <script src="js/services/memes.service.js"></script>
+        <script src="js/services/gallery.service.js"> </script>
+        <script src="js/services/util.service.js"></script>
+
+</body>
+<body onclick="init()">
+    <h1>meme app</h1>
+    <table class="editor-container" style="float: right;">
+        <tr>
+            <td>
+                <label for="top-line-text">Top line:</label>
+                <input type="text" id="top-line-text" class="line-text" value="Top line">
+                <button class="switch-line-button">Switch</button>
+                <button class="delete-line-button">Delete</button>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label for="bottom-line-text">Bottom line:</label>
+                <input type="text" id="bottom-line-text" class="line-text" value="Bottom line">
+                <button class="switch-line-button">Switch</button>
+                <button class="delete-line-button">Delete</button>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <button class="add-line-button">Add line</button>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label for="font-family">Font family:</label>
+                <select id="font-family">
+                    <option value="Impact">Impact</option>
+                    <option value="Arial">Arial</option>
+                    <option value="Times New Roman">Times New Roman</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <input type="color" onchange="setStrokeStyle(this.value)" class="stroke">
+                <input type="color" onchange="setFillStyle(this.value)" class="fill">
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label for="font-size">Font size:</label>
+                <input type="number" id="font-size" value="36">
+            </td>
+        </tr>
+        <tr>
+            <td>
+            <label for="alignment">Alignment:</label>
+            <select id="alignment">
+                <option value="left">Left</option>
+                <option value="center">Center</option>
+                <option value="right">Right</option>
+            </select>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <input type="file" class="file-input btn" name="image" onchange="onImgInput(event)" />
+                <button class="btn fb-btn" onclick="onUploadImg()">Upload your meme to Facebook</button>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <a href="#" class="my-img" onclick="downloadImg(this)" download="my-img.jpeg">Download your meme</a>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <button onclick="clearCanvas()">Clear</button>
+                </div>
+    </table>
+
+    <div class="canvas-container">
+        <canvas id="my-canvas" height="450" width="450" style="outline: 1px solid green">
+        </canvas>
+    </div>
+
+    <div class="modal" hidden></div>
+
+    <script src="js/gallery.controller.js"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <script src="js/main.controller.js"></script>
+    <script src="js/services/memes.service.js"></script>
+    <script src="js/services/gallery.service.js"> </script>
+    <script src="js/services/util.service.js"></script>
+</body>
+</html>
