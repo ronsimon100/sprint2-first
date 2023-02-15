@@ -1,0 +1,102 @@
+* {
+    margin: 0;
+    padding: 0;
+    font-family: sans-serif; 
+}
+
+body{
+    background-color: #ecf4fb;
+    margin-top: 70px; /* Add margin from the top for the navbar */
+}
+
+.navbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #3f3d3d;
+    height: 300px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 70px; 
+    padding: 0 20px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.canvas-container {
+    margin-left: 15px;
+  }
+
+.h1{
+    margin-left: 15px;
+}
+.navbar img {
+    height: 50px;
+}
+
+.navbar input {
+    width: 300px;
+    padding: 10px;
+    border-radius: 5px;
+    border: none;
+    margin-right: 20px;
+}
+
+.meme-gallery{
+    width: 80%;
+    margin: 150px auto 50px; /* Adjust the margin from the top and bottom */
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    grid-gap: 20px;
+}
+
+.meme-gallery img{
+    width: 100%;
+    cursor: pointer;
+}
+
+.meme-gallery img:hover{
+    transform: scale(0.8) rotate(-15deg);
+    border-radius: 20px;
+    box-shadow: 0 32px 75px rgba(68, 77, 136, 0.2);
+}    
+
+.full-img{
+    width: 100%;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.9);
+    position:fixed;
+}
+
+.editor-container {
+    background-color: #f2f2f2;
+    border: 1px solid #ddd;
+    padding: 20px;
+}
+
+
+.editors {
+    display: flex;
+    flex-direction: column;
+}
+
+
+.editor {
+    margin-bottom: 10px;
+}
+
+.fb-btn {
+    background-color: #3b5998;
+    color: white;
+    background-image: url('https://cdn3.iconfinder.com/data/icons/capsocial-round/500/facebook-512.png');
+    background-size: 20px 20px;
+    background-repeat: no-repeat;
+    background-position: 10px center;
+    padding-left: 40px;
+    padding-right: 20px;
+  }
+  
+  .fb-btn:hover {
+    background-color: #2d4373;
+  }
