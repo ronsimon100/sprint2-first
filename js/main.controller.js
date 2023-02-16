@@ -1,267 +1,279 @@
-const TOUCH_EVS = ['touchstart', 'touchmove', 'touchend']
+'use strict'
+var gCanvas;
+var gCtx;
+var gMeme;
 
-let gElCanvas
-let gCtx
-let gCurrImage
-let gLastPos = { x: null, y: null }
-let gIsDrag
-let gColor
-let gLastDiff
-
-function onInit() {
-  gElCanvas = document.querySelector('#my-canvas')
-  gCtx = gElCanvas.getContext('2d')
-  const canvas = document.getElementById("canvas");
-  const ctx = canvas.getContext("2d");
-  const image = document.getElementById("source");
-
-  image.addEventListener("load", (e) => {
-    ctx.drawImage(image, 33, 71, 104, 124, 21, 20, 87, 104);
-  });
-  resizeCanvas()
-
-  addListeners()
-  toggleInputs(true)
-}
-
-function setShape(shape) {
-  gCurrShape = shape
-}
-
-function resizeCanvas() {
-  const elContainer = document.querySelector('.canvas-container')
-  gElCanvas.width = elContainer.offsetWidth
-  gElCanvas.height = elContainer.offsetHeight
-}
-
-function resizeImg(){
-  const elContainer = document.querySelector('.canvas-container')
-  gImage.width = elContainer.offsetWidth
-  gImage.height = elContainer.offsetHeight
-}
-
-function addListeners() {
-  addMouseListeners()
-  addTouchListeners()
-  window.addEventListener('resize', () => {
-    resizeCanvas()
-    resizeImg()
-  })
-}
-
-function addMouseListeners() {
-  gElCanvas.addEventListener('mousedown', onDown)
-  gElCanvas.addEventListener('mousemove', onMove)
-  gElCanvas.addEventListener('mouseup', onUp)
-}
-
-function addTouchListeners() {
-  gElCanvas.addEventListener('touchstart', onDown)
-  gElCanvas.addEventListener('touchmove', onMove)
-  gElCanvas.addEventListener('touchend', onUp)
-}
-
-function getEvPos(ev) {
-  let pos = {
-    x: ev.offsetX,
-    y: ev.offsetY,
+function initCanvas(img) {
+    gCanvas = document.querySelector('.canvas');
+    gCtx = gCanvas.getContext('2d');
+    gMeme = createMeme();
+    var imgSize = renderCanvas();
+    resizeCanvas(imgSize);
+    var txts = gMeme.txts;
+    locateLine();
+    renderTxtLine(txts);
+    console.log(gMeme);
+    
   }
 
-  if (TOUCH_EVS.includes(ev.type)) {
-    
-    ev.preventDefault()
-    ev = ev.changedTouches[0]
-    
-    pos = {
-      x: ev.pageX - ev.target.offsetLeft - ev.target.clientLeft,
-      y: ev.pageY - ev.target.offsetTop - ev.target.clientTop,
+  function getCurrImg() {
+    var currImg = loadFromStorage(IMG_KEY);
+    return currImg;
+}
+
+function createMeme() {
+    return {
+        width: gCanvas.width,
+        height: gCanvas.height,
+        size: 30,
+        align: 'left',
+        color: '#ffffff',
+        textShadowWhite: false,
+        textShadowBlack: true,
+        font: 'Impact',
+        txts: [
+            {
+                line: '',
+                order: 0,
+                posX: 80,
+                posY: 60
+            }]
+        }
+}
+
+  function renderCanvas() {
+    var img = getCurrImg();
+    var imgCanvas = new Image();
+    imgCanvas.src = img.url;
+    console.log(img);
+    imgCanvas.onload = function () {
+        drawCanvas(this);
+        console.log(this);
+        gMeme.txts.forEach(function (txt, idx) {
+            renderTxt(txt, idx);
+        })
+    };
+    return { width: imgCanvas.width, height: imgCanvas.height };
+  }
+
+  function resizeCanvas(imgSize) {
+    gCanvas.width = 500;
+    gCanvas.height = 400;
+    var ratio = imgSize.width / imgSize.height;
+    if (imgSize.width > imgSize.height) {
+        if (imgSize.width > gCanvas.width) {
+            imgSize.height = gCanvas.width * (1 / ratio);
+            gCanvas.height = imgSize.height;
+        } else {
+            var widthRatio = gCanvas.width / imgSize.width;
+            imgSize.width = gCanvas.width;
+            imgSize.height *= widthRatio;
+        }
+    } else {
+        if (imgSize.height > gCanvas.height) {
+            gCanvas.height = gCanvas.width;
+            imgSize.width = gCanvas.height * ratio;
+            gCanvas.width = imgSize.width;
+        } else {
+            var heightRatio = gCanvas.height / imgSize.height;
+            imgSize.height = gCanvas.height;
+            imgSize.width *= heightRatio;
+        }
     }
+    gCtx.fillStyle = 'rgb(239, 245, 243)';
+    gCtx.fillRect(0, 0, imgSize.width, imgSize.height);
+    gMeme.width = imgSize.width;
+    gMeme.height = imgSize.height;
+}
+  
+  function renderGallery(imgs) {
+    imgs = getImgsForDisplay();
+    var strHtml = '';
+    imgs.forEach(function (img, idx) {
+      strHtml += `<img id="${img.id}" class="item-img" onclick="selectImg(this)" style="background-image: url('${img.url}')"></img>\n`
+    });
+    document.querySelector('.gallery').innerHTML = strHtml;
   }
-  return pos
-}
 
-function renderCanvas() {
-  gCtx.fillStyle = '#ede5ff59'
-  gCtx.fillRect(0, 0, gElCanvas.width, gElCanvas.height)
-  renderImg()
-}
 
-function onDown(ev) {
-  console.log('Down')
-  const pos = getEvPos(ev)
-  gIsDrag = true
-  document.body.style.cursor = 'grabbing'
-  gLastPos = pos
-}
-
-function onMove(ev) {
-  if (!gIsDrag) return
-  const diff = Math.abs(ev.movementX) > Math.abs(ev.movementY) ? Math.abs(ev.movementX) : Math.abs(ev.movementY)
-  let size = 10 * diff
-  if (size > 100) size = 100
-  if (size < 10) size = 10
-
-  const pos = getEvPos(ev)
-  const { x, y } = pos
-  const color = gColor
-  drawShape(x, y, size, color, diff)
-  gLastPos = pos
-  gLastDiff = diff
-}
-
-function onUp() {
-  console.log('Up')
-  gIsDrag = false
-  document.body.style.cursor = 'grab'
-}
-
-function drawShape(x, y, size, color, diff) {
-  switch (gCurrShape) {
-    case 'triangle':
-      drawTriangle(x, y, size, color)
-      break
-    case 'circle':
-      drawArc(x, y, size, color)
-      break
-    case 'rect':
-      drawRect(x, y, size, color)
-      break
-    case 'text':
-      const { txt, font, fontSize } = getTxtInfo()
-      drawText(x, y, fontSize, color, txt, font)
-      break
-    case 'line':
-      drawLine(x, y, size, color, diff)
-      break
+  function renderTxtLine() {
+      var strHtml = ``
+      gMeme.txts.forEach(function (txt, idx) {
+          strHtml +=  `<div class="flex line-btns">
+              <input type="txt" class="inline" id="${txt.order}" placeholder="Enter your text" `
+              console.log(txt.line);
+          if (txt.value !== '') {
+              strHtml += ` value="${txt.line}" `;
+          }
+              
+          strHtml += 
+              `oninput="onTxtInsert(this)" onkeyup="handleKey(event)" autofocus>
+              <div class="line-btns-container flex space-around align-center">
+                  <button class="btn btn-danger" onclick="onDeleteLine(${idx})"><i class="fa fa-trash"></i></button>
+                  <div class="flex arrows">
+                      <button id="${txt.order}" class="btn left" onclick="moveLine(this, 'left')"><i class="fas fa-arrow-left"></i></button>
+                      <button id="${txt.order}" class="btn up" onclick="moveLine(this, 'up')"><i class="fas fa-arrow-up"></i></button>
+                      <button id="${txt.order}" class="btn down" onclick="moveLine(this, 'down')"><i class="fas fa-arrow-down"></i></button>
+                      <button id="${txt.order}" class="btn right" onclick="moveLine(this, 'right')"><i class="fas fa-arrow-right"></i></button>
+                  </div>
+              </div>
+          </div>`;
+      })
+      document.querySelector('.line-text').innerHTML = strHtml;
   }
+
+function renderTxt(txt, idx) {
+    var x = txt.posX;
+    var y = txt.posY;
+    var txtSize = `${gMeme.size}px`;
+    var fontSize = `${gMeme.size}px`;
+    var txtFont = gMeme.font;
+    if (gCanvas.getContext) {
+        gCtx.font = `${txtSize} ${txtFont}`;
+        gCtx.font = `${fontSize} ${txtFont}`;  
+        var currColor = gMeme.color
+        gCtx.fillStyle = currColor;
+        var shadowColor = '#000000';
+        if (gMeme.textShadowBlack === false) {
+            if (gMeme.textShadowWhite === true) {
+                shadowColor = '#ffffff';
+            } else shadowColor = null;  
+        }
+        gCtx.strokeStyle = shadowColor;
+        gCtx.strokeText(txt.line,x, y);
+        gCtx.fillText(txt.line, x, y);
+        gCtx.save();
+    }
+}
+  
+function filterImgs(imgs) {
+    var userSearch = document.getElementById('search').value;
+    if (userSearch === '') return imgs;
+    else return imgs.filter(function (img) {
+        return img.keywords.some(function (keyword) {
+            return keyword.substring(0, userSearch.length) === userSearch;
+        });
+    });
 }
 
-function drawArc(x, y, size = 60, color = 'blue') {
-  gCtx.beginPath()
-  gCtx.lineWidth = '6'
-  gCtx.arc(x, y, size, 0, 2 * Math.PI)
-  gCtx.strokeStyle = 'white'
-  gCtx.stroke()
-  gCtx.fillStyle = color
-  gCtx.fill()
+
+function showGallery() {
+    var elGallery = document.querySelector('.gallery');
+    elGallery.classList.remove('hide');
+    var elSearch = document.querySelector('.filter');
+    elSearch.classList.remove('hide');
+    var elCanvas = document.querySelector('.container-canvas-page');
+    elCanvas.classList.add('hide');
+    addActiveOnLink('.gallery-link');
+    renderGallery()
 }
 
-function drawRect(x, y, size, color) {
-  gCtx.strokeStyle = 'black'
-  gCtx.strokeRect(x, y, size, size)
-  gCtx.fillStyle = color
-  gCtx.fillRect(x, y, size, size)
+function showCanvas() {
+    var elCanvas = document.querySelector('.container-canvas-page');
+    elCanvas.classList.remove('hide');
+    var elGallery = document.querySelector('.gallery');
+    elGallery.classList.add('hide');
+    var elSearch = document.querySelector('.filter');
+    elSearch.classList.add('hide');
+    removeActiveOnLink('.gallery-link');
+    
 }
 
-function drawImg(x, y, size, color, txt, font) {
-  gCtx.lineWidth = 1
-  gCtx.strokeStyle = 'brown'
-  gCtx.fillStyle = color
-  gCtx.font = `${size}px ${font}`
-  gCtx.textAlign = 'center'
-  gCtx.textBaseline = 'middle'
-
-  gCtx.fillText(txt, x, y) 
-  gCtx.strokeText(txt, x, y) 
+function onTxtInsert(elLine) {
+    if (elLine.value) {
+        var idx = elLine.id;
+        gMeme.txts[idx].line = elLine.value;
+        var txt = getTxtById(+idx)
+        renderCanvas();
+    } 
 }
 
-function drawTriangle(x, y, size, color) {
-  gCtx.beginPath()
-
-  gCtx.moveTo(x, y) 
-  gCtx.lineTo(x + size, y + size) 
-  gCtx.lineTo(x - size, y + size)
- 
-  gCtx.closePath()
-  gCtx.strokeStyle = 'blue' 
-  gCtx.stroke() 
-  gCtx.fillStyle = color 
-  gCtx.fill() 
+function onChangeSize(diff) {
+    gMeme.size += (diff * 3);
+    renderCanvas();
 }
 
-function drawLine(x, y, size, color, diff) {
-  if (diff === gLastDiff) gCtx.beginPath()
-  const x1 = gLastPos.x
-  const y1 = gLastPos.y
-  gCtx.moveTo(x, y)
-  gCtx.lineTo(x1, y1)
-
-  gCtx.lineWidth = size / 15
-  gCtx.strokeStyle = color
-  gCtx.stroke()
+function onChangeColor() {
+    var elInputColor = document.querySelector('#colorValue').value;
+    gMeme.color = elInputColor;
+    renderCanvas();  
 }
 
-function getTxtInfo() {
-  const txt = document.querySelector('.txt').value
-  const font = document.querySelector('.font').value
-  const fontSize = document.querySelector('.font-size').value
-  return { txt, fontSize, font }
+function changeFont() {
+    var elFont = document.querySelector('.select-font').value;
+        gMeme.font = elFont; 
+    renderCanvas();  
 }
 
-function changeColor(color) {
-  gColor = color
+
+function moveLine(elLine, pos) {
+    var id = elLine.id;
+
+    var x = gMeme.txts[id].posX;
+    var y = gMeme.txts[id].posY;
+    if (pos === 'up') {
+        y -= 15; 
+        gMeme.txts[id].posY = y;
+    }
+    if (pos === 'down') {
+        y += 15; 
+        gMeme.txts[id].posY = y;
+    }
+    if (pos === 'right') {
+        x += 15; 
+        gMeme.txts[id].posX = x;
+    }
+    if (pos === 'left') {
+        x -= 15;
+        gMeme.txts[id].posX = x;
+    } 
+    renderCanvas();
+
 }
 
-function toggleInputs(isHidden) {
-  document.querySelector('.txt-inputs-container').hidden = isHidden
+function saveCurrImg(img) {
+    saveToStorage(IMG_KEY, img);
+    }
+
+//download
+function downloadImg(elImg) {
+    var currImg = gCanvas.toDataURL("image/png").replace("image/png", "image/octet-stream");
+    elImg.href = currImg;
 }
+
+function onDeleteLine(id) {
+    gMeme.txts[id].line = '';
+    renderCanvas();
+    renderTxtLine();
+}
+
+function handleKey(ev) {
+    if (ev.key === 'Backspace') renderCanvas();
+}
+
 
 function clearCanvas() {
-  gCtx.clearRect(0, 0, gElCanvas.width, gElCanvas.height)
+    gCtx.clearRect(0, 0, gCanvas.width, gCanvas.height);
+    gMeme = createMeme();
 }
 
-function downloadCanvas(elLink) {
-  const data = gElCanvas.toDataURL() 
-  
-  elLink.href = data 
-  elLink.download = 'my-img' 
+function addActiveOnLink(className) {
+    var elLink = document.querySelector(className);
+    elLink.classList.add('active');
 }
 
-function onUploadImg() {
-  const imgDataUrl = gElCanvas.toDataURL('image/jpeg') 
-
-  function onSuccess(uploadedImgUrl) {
-
-    const encodedUploadedImgUrl = encodeURIComponent(uploadedImgUrl)
-    console.log(encodedUploadedImgUrl)
-    window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodedUploadedImgUrl}&t=${encodedUploadedImgUrl}`)
-  }
-  doUploadImg(imgDataUrl, onSuccess)
+function removeActiveOnLink(className) {
+    var elLink = document.querySelector(className);
+    elLink.classList.remove('active');
 }
 
-function doUploadImg(imgDataUrl, onSuccess) {
-  const formData = new FormData()
-  formData.append('img', imgDataUrl)
-  const XHR = new XMLHttpRequest()
-  XHR.onreadystatechange = () => {
-    if (XHR.readyState !== XMLHttpRequest.DONE) return
-    if (XHR.status !== 200) return console.error('Error uploading image')
-    const { responseText: url } = XHR
-    console.log('Got back live url:', url)
-    onSuccess(url)
-  }
-  XHR.onerror = (req, ev) => {
-    console.error('Error connecting to server with request:', req, '\nGot response data:', ev)
-  }
-  XHR.open('POST', '//ca-upload.com/here/upload.php')
-  XHR.send(formData)
+function addClassBlockBtn() {
+    var elAddBtn = document.querySelector('.add-line-btn');
+    elAddBtn.classList.add('block-btn');
+    elAddBtn.style.color = 'red';
 }
 
-function onImgInput(ev) {
-  loadImageFromInput(ev, renderImg)
-}
 
-function loadImageFromInput(ev, onImageReady) {
-  const reader = new FileReader()
-  reader.onload = function (event) {
-    let img = new Image() 
-    img.src = event.target.result 
-    img.onload = onImageReady.bind(null, img)
-  }
-  reader.readAsDataURL(ev.target.files[0]) 
-}
 
-function renderImg(img) {
-  gCtx.drawImage(img, 0, 0, gElCanvas.width, gElCanvas.height)
-}
+
 
