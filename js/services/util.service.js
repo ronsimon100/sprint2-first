@@ -20,7 +20,7 @@ function saveToStorage(key, val) {
     localStorage.setItem(key, JSON.stringify(val))
 }
 
-function doFaceBookUpload() {
+function shareOnFacebook() {
     const imgDataUrl = gCanvas.toDataURL('image/jpeg') 
   
     function onSuccess(uploadedImgUrl) {

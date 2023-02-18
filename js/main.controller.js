@@ -2,6 +2,8 @@
 var gCanvas;
 var gCtx;
 var gMeme;
+let state;
+let style;
 
 function initCanvas(img) {
     gCanvas = document.querySelector('.canvas');
@@ -13,7 +15,6 @@ function initCanvas(img) {
     locateLine();
     renderTxtLine(txts);
     console.log(gMeme);
-    
   }
 
   function getCurrImg() {
@@ -57,7 +58,7 @@ function createMeme() {
   }
 
   function resizeCanvas(imgSize) {
-    gCanvas.width = 500;
+    gCanvas.width = 400;
     gCanvas.height = 400;
     var ratio = imgSize.width / imgSize.height;
     if (imgSize.width > imgSize.height) {
@@ -155,9 +156,9 @@ function filterImgs(imgs) {
         });
     });
 }
-
-
 function showGallery() {
+    var elAbout = document.querySelector('.about-me');
+    elAbout.classList.add('hide');
     var elGallery = document.querySelector('.gallery');
     elGallery.classList.remove('hide');
     var elSearch = document.querySelector('.filter');
@@ -165,7 +166,19 @@ function showGallery() {
     var elCanvas = document.querySelector('.container-canvas-page');
     elCanvas.classList.add('hide');
     addActiveOnLink('.gallery-link');
-    renderGallery()
+    removeActiveOnLink('.about-link');
+}
+function showAbout() {
+    var elAbout = document.querySelector('.about-me');
+    elAbout.classList.remove('hide');
+    var elGallery = document.querySelector('.gallery');
+    elGallery.classList.add('hide');
+    var elSearch = document.querySelector('.filter');
+    elSearch.classList.add('hide');
+    var elCanvas = document.querySelector('.container-canvas-page');
+    elCanvas.classList.add('hide');
+    addActiveOnLink('.about-link');
+    removeActiveOnLink('.gallery-link');
 }
 
 function showCanvas() {
@@ -174,8 +187,11 @@ function showCanvas() {
     var elGallery = document.querySelector('.gallery');
     elGallery.classList.add('hide');
     var elSearch = document.querySelector('.filter');
-    elSearch.classList.add('hide');
+    elSearch.classList.remove('hide');
+    var elAbout = document.querySelector('.about-me');
+    elAbout.classList.add('hide');
     removeActiveOnLink('.gallery-link');
+    removeActiveOnLink('.about-link');
     
 }
 
@@ -272,6 +288,7 @@ function addClassBlockBtn() {
     elAddBtn.classList.add('block-btn');
     elAddBtn.style.color = 'red';
 }
+
 
 
 

@@ -1,135 +1,140 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-  <title>welcome to meme gallery</title>
-  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css"
-    integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt" crossorigin="anonymous">
-  <link rel="shortcut icon" href="img/fabicon_trans.png" type="image/png">
-  <link href="lib/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
-  <link rel="stylesheet" href="css/style.css">
-</head>
-<div>
-  <input type="file" class="file-input btn" name="image" onchange="doUploadImg(event)" />
-  <button class="btn fb-btn" onclick="doFaceBookUpload()">Upload your meme to Facebook</button>
-</div>
-<body onload="init()">
-  <header class="header flex">
-    <div class="header-container flex align-center space-around column">
-      <ul class="nav clean-list flex align-center">
-        <li class="gallery-link"><a class="gallery-link" onclick="showGallery()">Gallery</a></li>
-      </ul>
-      <h1>Meme editor</h1>
-    </div>
-  </header>
-  <div class="main-page">
-    <main id="gallery" class="main-container flex align-center column">
-      <div class="filter flex align-center column">
-      </div>
-      <div class="search">
-        <i class="fa fa-search"></i>
-        <div class="search">
-          <input list="search-datalist" name="search-datalist" id="search" type="txt" class="search-words"
-            oninput="searchImg()" placeholder="look for your fav img">
-          <datalist id="search-datalist">
-            <option value="Trump">
-            <option value="Dogs">
-            <option value="Babe sleep">
-            <option value="cat">
-            <option value="winning babe">
-            <option value="history channel">
-            <option value="baby suprised">
-            <option value="purple jacket">
-            <option value="nasty babe">
-            <option value="obama">
-            <option value="paul pierce">
-            <option value="yazata zadik">
-            <option value="de caprio">
-            <option value="matrix">
-            <option value="lord of the rings">
-            <option value="x man">
-            <option value="putin">
-            <option value="toy story">
-
-          </datalist>
-        </div>
-        <div class="gallery-images flex">
-          <div class="gallery flex"></div>
-        </div>
-        <div class="container-canvas-page hide flex align-center space-around column">
-          <canvas id="canvas" class="canvas"></canvas>
-          <div class="editor container flex space-around align-center">
-            <button class="btn return-btn" onclick="showGallery()">
-              <span class="different-color"><i class="fa fa-long-arrow-left"></i></span>Back to gallery</button>
-            <div class="txt-container flex space-around align-center ">
-              <div class="line-text flex column"></div>
-              <button class="btn add-line-btn" onclick="addLine()">Add line (up to 3)</button>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css" integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt" crossorigin="anonymous">
+    <link rel="shortcut icon" href="img/fabicon_trans.png" type="image/png">
+    <link href="lib/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="css/style.css"/>
+  </head>
+  
+  </div>
+    <body onload="init()">
+        <header class="header flex">
+            <div class="header-container flex align-center space-around column">
+                <ul class="nav clean-list flex align-center">
+                    <li class="about-link"><a href="#about-me" class="about-link" onclick="showAbout()">info</a></li>
+                    <li class="gallery-link"><a class="gallery-link" onclick="showGallery()">Gallery</a></li>
+                </ul>
+                <h1>meme world</h1>
             </div>
-            <div class="editor-btns container d-flex justify-content-between align-items-center">
-              <div class="editor-btns-first-line">
-                <ul class="clean-list d-flex">
-                  <li>
-                    <button class="btn color-btn">
-                      <input type="color" id="colorValue" name="color" value="#ffffff" onchange="onChangeColor()" />
-                      <label for="colorValue"></label>
-                    </button>
-                  </li>
-                  <li><button class="btn txt-align-btn" onclick="txtAlign('left')"><i
-                        class="fa fa-align-left"></i></button>
-                  </li>
-                  <li><button class="btn txt-align-btn" onclick="txtAlign('center')"><i
-                        class="fa fa-align-center"></i></button></li>
-                  <li><button class="btn txt-align-btn" onclick="txtAlign('right')"><i
-                        class="fa fa-align-right"></i></button></li>
-                </ul>
-              </div>
-              <div class="editor-btns-second-line">
-                <ul class="clean-list d-flex">
-                  <li class="only-txt only-txt-size-btn">Size</li>
-                  <li><button class="btn size-btn size-plus-btn" onclick="onChangeSize(1)"><i
-                        class="fa fa-plus"></i></button></li>
-                  <li><button class="btn size-btn size-minus-btn" onclick="onChangeSize(-1)"><i
-                        class="fa fa-minus"></i></button></li>
-                </ul>
-              </div>
-              <div class="editor-btns-third-line">
-                <ul class="clean-list d-flex">
-                  <li class="only-txt only-txt-font">Font</li>
-                  <li>
-                    <select class="select-font btn font-list-btn" onchange="changeFont()">
-                      <option value="impac">Impact</option>
-                      <option value="Arial">Arial</option>
-                      <option value="Cursive">Cursive</option>
-                      <option value="Fantasy">Fantasy</option>
-                      <option value="Times New Roman">Times New Roman</option>
-                    </select>
-                  </li>
-                </ul>
-              </div>
-              <div class="editor-btns-fourth-line">
-                <ul class="clean-list d-flex">
-                  <li class="only-txt only-txt-shadow">Text Shadow</li>
-                  <li><button class="btn txt-shadow-btn txt-shadow-white-btn" onclick="txtShadow('#ffffff')"></button>
-                  </li>
-                  <li><button class="btn txt-shadow-btn txt-shadow-black-btn" onclick="txtShadow('#000000')"></button>
-                  </li>
-                </ul>
-              </div>
+        </header>
+        <div class="main-page"></div>
+        <main id="gallery" class="main-container flex align-center column">
+            <div class="filter flex align-center column">
+                <h3>Choose your photo:</h3>
+                <div class="search">
+                    <i class="fa fa-search"></i>
+                    <input list="search-datalist" name="search-datalist" id="search" type="txt" class="search-words" oninput="searchImg()" placeholder="Type an image category...">
+                    <datalist id="search-datalist">
+                        <option value="Trump">
+                        <option value="Dogs">
+                        <option value="Babe sleep">
+                        <option value="cat">
+                        <option value="winning babe">
+                        <option value="history channel">
+                        <option value="baby suprised">
+                        <option value="purple jacket">
+                        <option value="nasty babe">
+                        <option value="obama">
+                        <option value="paul pierce">
+                        <option value="yazata zadik">
+                        <option value="de caprio">
+                        <option value="matrix">
+                        <option value="lord of the rings">
+                        <option value="x man">
+                        <option value="putin">
+                        <option value="toy story">
+                    </datalist>
+                </div>
             </div>
-            <button class="btn download-btn">
-              <a href="#" onclick="downloadImg(this)" class="download" download="my-img.jpg">
-                <span class="different-color"><i class="fa fa-download"></i></span>Download
-              </a>
-            </button>
+            <div class="gallery-images flex">
+              <div class="gallery flex"></div>
           </div>
-    </main>
-    <script src="js/services/meme.service.js"></script>
-    <script src="js/main.controller.js"></script>
-    <script src="js/services/util.service.js"></script>
-    <script src="js/services/gallery.service.js"> </script>
-</body>
-
+          <div class="container container-canvas-page hide flex align-center space-around column">
+                  <canvas id="canvas" class="canvas"></canvas>
+              <div class="editor container flex space-around align-center">
+                  <button class="btn return-btn" onclick="showGallery()">
+                      <span class="different-color"><i class="fa fa-long-arrow-left"></i></span>Back to gallery</button>
+                  <div class="txt-container flex space-around align-center ">
+                      <div class="line-text flex column"></div>
+                      <button class="btn add-line-btn" onclick="addLine()">Add line </button>
+                  </div>
+                  <div class="editor-btns container clean-list flex space-around align-center">
+                      <div class="editor-btns-first-line">
+                          <ul class="clean-list flex">
+                              <li><button class="btn color-btn">
+                                  <input type="color" id="colorValue" name="color" value="#ffffff" onchange="onChangeColor()"/>
+                                  <label for="colorValue"></label>
+                              </button></li>
+                              <li><button class="btn txt-align-btn" onclick="txtAlign('left')"><i class="fa fa-align-left"></i></button></li>
+                              <li><button class="btn txt-align-btn" onclick="txtAlign('center')"><i class="fa fa-align-center"></i></button></li>
+                              <li><button class="btn txt-align-btn" onclick="txtAlign('right')"><i class="fa fa-align-right"></i></button></li>
+                          </ul>
+                      </div>
+                      <div class="editor-btns-second-line">
+                          <ul class="clean-list flex">
+                              <li class="only-txt only-txt-size-btn">Size</button></li>
+                              <li><button class="btn size-btn size-plus-btn" onclick="onChangeSize(1)"><i class="fa fa-plus"></i></button></li>
+                              <li><button class="btn size-btn size-minus-btn" onclick="onChangeSize(-1)"><i class="fa fa-minus"></i></button></li>
+                          </ul>
+                      </div>
+                      <div class="editor-btns-third-line">
+                          <ul class="clean-list flex">
+                              <li class="only-txt only-txt-font">Font</li>
+                              <li>
+                                  <select class="select-font btn font-list-btn" onchange="changeFont()">
+                                      <option>Impact</option>
+                                      <option>Arial</option>
+                                      <option>Cursive</option>
+                                      <option>Fantasy</option>
+                                      <option>Times New Roman</option>
+                                      <option>Shrikhand</option>
+                                      <option>Paytone</option>
+                                  </select>
+                              </li>
+                          </ul>
+                      </div> 
+                      <div class="editor-btns-fourth-line">
+                          <ul class="clean-list flex">
+                              <li class="only-txt only-txt-shadow">Text Shadow</li>
+                              <li><button class="btn txt-shadow-btn txt-shadow-white-btn" onclick="txtShadow('#ffffff')">
+                              </button></li>
+                              <li><button class="btn txt-shadow-btn txt-shadow-black-btn" onclick="txtShadow('#000000')">
+                              </button></li>
+                          </ul>
+                      </div> 
+                  </div>
+                  <button class="btn download-btn">
+                      <a href="#" onclick="downloadImg(this)" class="download" download="my-img.jpg" >
+                          <span class="different-color"><i class="fa fa-download"></i></span>Download
+                      </a>
+                  </button> 
+              </div>
+          </div>
+          <div id="about-me" class="about-me hide">
+              <div class="section-about flex column"> 
+                  <h2 class="about-header">About me</h2>
+                  <div class="me flex">
+                      <div class="me flex ron">
+                          <img class="team-img" src="img/memeimage.png" alt="ron simon">
+                          <h4 class="team-name liron">ron gabriel simon</h4>
+                          <p class="text-muted">a meme producer and a celtic fan</p>
+                      </div>
+                  </div>
+              </section>
+              </div>
+          </div>
+          <button class="btn" onclick="shareOnFacebook()">
+            <i class="fab fa-facebook"></i>
+          </button>
+      </main>
+        <footer class="footer">created by ron simon</footer>
+        <script src="js/services/util.service.js"></script>
+        <script src="js/services/gallery.service.js"></script>
+        <script src="js/services/meme.service.js"></script>
+        <script src="js/main.controller.js"></script>  
+    </body>
 </html>
