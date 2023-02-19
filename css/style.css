@@ -1,4 +1,3 @@
-
 * {
     box-sizing: border-box;
 }
@@ -183,7 +182,7 @@ a {
 
 .fa-search {
     padding-right: 10px;
-    text-shadow: 0px 0px #2210c2;
+    text-shadow: 1px 1px #2210c2;
 }
 
 /*GALLERY*/
@@ -220,7 +219,7 @@ a {
 }
 
 .item-img:hover {
-    transform: scale(0.8) rotate(-25deg);
+    transform: scale(0.8) rotate(-15deg);
     border-radius: 20px;
 
 }
@@ -309,12 +308,12 @@ i {
 }
 
 .editor {
-    background-color: #686c69;
+    background-color: #069926;
     flex-wrap: wrap;
     align-self: center;
 }
 
-.return-btn, .download-btn {
+.return-btn, .download-btn, .download-btn a {
     width: 100%;
     height: 50px;
     line-height: 50px;
@@ -323,45 +322,14 @@ i {
 }
 
 .download-btn a {
-    display: inline-block;
+    display: block;
     padding: 0;
-    width: 45%;
-}
-
-.fb-btn {
-    display: inline-block;
-    background-color: #054be0;
-    color: white;
-    background-image: url('https://cdn3.iconfinder.com/data/icons/capsocial-round/500/facebook-512.png');
-    background-size: 20px 20px;
-    background-repeat: no-repeat;
-    background-position: 10px center;
-    padding-left: 40px;
-    padding-right: 20px;
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    margin-top: 10px;
-    margin-left: 10px;
-}
-
-.only-txt {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-
-.fb-btn:hover {
-    background-color: #0a47ca;
+    width: 100%;
 }
 
 .add-line-btn, .btn-danger, .right, .left, .up, .down {
     height: 50px;
 }
-
-.center-content {
-    text-align: center;
-  }
 
 .add-line-btn {
     width: 160px;
@@ -399,11 +367,10 @@ i {
 
 .editor-btns .btn, .only-txt {
     height: 50px;
-    align-items: center;
 }
 
 .editor-btns-first-line {
-    border-top: 2px solid rgb(12, 158, 4);
+    border-top: 2px solid rgb(145, 144, 144);
 }
 
 .editor-btns-first-line, .editor-btns-second-line, .editor-btns-third-line, .editor-btns-fourth-line {
@@ -435,7 +402,6 @@ i {
 
 .size-plus-btn, .size-minus-btn, .btn-danger, .txt-align-btn, .right, .left, .up, .down {
     font-size: 1.4rem;
-    align-items:center 
 }
 
 .txt-align-btn:active {
@@ -468,7 +434,6 @@ i {
 
 .only-txt-shadow {
     word-spacing: 3px;
-    align-items: center;
 }
 
 .txt-shadow-white-btn {
@@ -482,8 +447,8 @@ i {
 }
 
 .textlabel, .line-input {
-    padding: 20px;
-    margin: 20px;
+    padding: 5px;
+    margin: 5px;
 }
 
 .inline {
@@ -496,6 +461,26 @@ i {
 .editor-part {
     flex-direction: column;
 }
+
+.fb-btn {
+    background-color: #054be0;
+    color: white;
+    background-image: url('https://cdn3.iconfinder.com/data/icons/capsocial-round/500/facebook-512.png');
+    background-size: 20px 20px;
+    background-repeat: no-repeat;
+    background-position: 10px center;
+    padding-left: 40px;
+    padding-right: 20px;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    margin-top: 10px;
+    margin-left: 10px;
+  }
+  
+  .fb-btn:hover {
+    background-color: #0a47ca;
+  }
 
 .download:active {
     color: white;
